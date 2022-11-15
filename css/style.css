@@ -15,6 +15,26 @@ body {
     justify-content: flex-end;
 }
 
+.tut-but button {
+    margin: 2% 0%;
+}
+
+.tut-info {
+    width: 25%;
+    margin: 3%;
+}
+
+.tut-but {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+.tut-vid {
+    margin: 3%;
+}
+
 .butt a {
     display: flex;
     flex-direction: column;
