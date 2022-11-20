@@ -30,8 +30,6 @@ function check_correct(ax, ay, bx, by, cx, cy) {
 function change_scale() {
   scale_k = document.getElementById("scale_f").value;
   console.log("Scale changed", scale_k);
-
-    
   transform_m_1 = [[-1 * scale_k, 0, 0], [0, 1 * scale_k, 0], [0, 0, 1]]
   transform_m_2 = [[1 * scale_k, 0, 0], [0, -1 * scale_k, 0], [0, 0, 1]]
 }
