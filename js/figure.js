@@ -15,6 +15,18 @@ var is_move = false;
 var ax1, ay1, bx1, by1, cx1, cy1 = 0;
 
 
+function check_correct(ax, ay, bx, by, cx, cy) {
+  let ab = Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
+  let bc = Math.sqrt(Math.pow(bx - cx, 2) + Math.pow(by - cy, 2));
+  let ac = Math.sqrt(Math.pow(cx - ax, 2) + Math.pow(cy - ay, 2));
+
+  if (ab >= bc + ac || bc >= ab + ac || ac >=ab + bc) {
+    return false;
+  }
+
+  return true;
+}
+
 function change_scale() {
   scale_k = document.getElementById("scale_f").value;
   console.log("Scale changed", scale_k);
@@ -96,6 +108,13 @@ function stop() {
 function draw(ax, ay, bx, by, cx, cy) {
 
   ax1 = ax; ay1 = ay; bx1 = bx; by1 = by; cx1 = cx; cy1 = cy;
+
+  let res = check_correct(ax, ay, bx, by, cx, cy);
+
+  if (!res) {
+    alert("Дана фігура не являється трикутником, введіть координати спочатку!")
+    return;
+  }
 
   console.log(ax, ay, bx, by, cx, cy)
 
