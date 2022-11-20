@@ -7,6 +7,7 @@ get_and_draw();
 var scale_k = document.getElementById("scale_f").value;
 
 
+// матриці перетворень зі збільшенням відносно OX i OY
 var transform_m_1 = [[-1 * scale_k, 0, 0], [0, 1 * scale_k, 0], [0, 0, 1]]
 var transform_m_2 = [[1 * scale_k, 0, 0], [0, -1 * scale_k, 0], [0, 0, 1]]
 
@@ -15,12 +16,13 @@ var is_move = false;
 var ax1, ay1, bx1, by1, cx1, cy1 = 0;
 
 
+//перевірка вводу користувача на коректність
 function check_correct(ax, ay, bx, by, cx, cy) {
   let ab = Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
   let bc = Math.sqrt(Math.pow(bx - cx, 2) + Math.pow(by - cy, 2));
   let ac = Math.sqrt(Math.pow(cx - ax, 2) + Math.pow(cy - ay, 2));
 
-  if (ab >= bc + ac || bc >= ab + ac || ac >=ab + bc) {
+  if (ab >= bc + ac || bc >= ab + ac || ac >= ab + bc) {
     return false;
   }
 
@@ -34,6 +36,8 @@ function change_scale() {
   transform_m_2 = [[1 * scale_k, 0, 0], [0, -1 * scale_k, 0], [0, 0, 1]]
 }
 
+
+//функція множення двох матриць
 function multiply(a, b) {
   var aNumRows = a.length, aNumCols = a[0].length,
     bNumRows = b.length, bNumCols = b[0].length,
@@ -50,12 +54,14 @@ function multiply(a, b) {
   return m;
 }
 
+
+// повторення процесу трансформацій кожні 3 секунди
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
-
+// асинхронна функція для перетворення
 async function transform() {
 
   is_move = true;
@@ -64,10 +70,14 @@ async function transform() {
 
     let old_matrix = [[ax1, ay1, 1], [bx1, by1, 1], [cx1, cy1, 1]]
 
+    // парні кроки - відображення по осі ОХ, непарні - по осі ОУ
     if (step % 2 == 0) {
       step++;
+
+      //отримання нових координат
       let new_m = multiply(old_matrix, transform_m_1);
       console.log(new_m)
+      //відмальовка
       draw(new_m[0][0], new_m[0][1], new_m[1][0], new_m[1][1], new_m[2][0], new_m[2][1])
     } else {
       step++;

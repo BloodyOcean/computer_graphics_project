@@ -22,7 +22,7 @@ function readImage() {
       var imageData = ctx_xyz.getImageData(0, 0, EL("#canvas_xyz").width, EL("#canvas_xyz").height)
 
       copy_context = imageData
-      
+
       editPixels(imageData.data);
 
       drawEditedImage(imageData);
@@ -32,9 +32,6 @@ function readImage() {
   });
   FR.readAsDataURL(this.files[0]);
 }
-
-
-
 
 function xyzToRgb(xyz) {
 
@@ -47,7 +44,6 @@ function xyzToRgb(xyz) {
   return rgb;
 }
 
-
 function rgbToXyz(rgb) {
   var xyz = []
   xyz[0] = rgb[0] * 0.4124 + rgb[1] * 0.3576 + rgb[2] * 0.1805;
@@ -56,7 +52,6 @@ function rgbToXyz(rgb) {
 
   return xyz
 }
-
 
 const RGBToHSL = (r, g, b) => {
   r /= 255;
@@ -68,8 +63,8 @@ const RGBToHSL = (r, g, b) => {
     ? l === r
       ? (g - b) / s
       : l === g
-      ? 2 + (b - r) / s
-      : 4 + (r - g) / s
+        ? 2 + (b - r) / s
+        : 4 + (r - g) / s
     : 0;
   return [
     60 * h < 0 ? 60 * h + 360 : 60 * h,
@@ -88,28 +83,30 @@ const HSLToRGB = (h, s, l) => {
   return [255 * f(0), 255 * f(8), 255 * f(4)];
 };
 
+// зміна яскравості для пурпурового
 function changeLum() {
+
   let imageData = ctx.getImageData(0, 0, EL("#canvas").width, EL("#canvas").height)
-
-  //let imageData = ctx_xyz.getImageData(0, 0, EL("#canvas_xyz").width, EL("#canvas_xyz").height)
-
   let imgData = imageData.data
   var luminanceBalance = document.getElementById("lum-range").value
   console.log(luminanceBalance)
 
+  // ітерація по кожному пікселю
   for (var i = 0; i < imgData.length; i += 4) {
+
+    //конвертування в перцептивну модель
     let res = RGBToHSL(imgData[i], imgData[i + 1], imgData[i + 2]);
 
-    //console.log(res);
-
-    if (res[0] >= 260 && res[0] <= 285) {
+    // аналіз значень кольору піксела і зміна його атрибуту яскравості
+    if (res[0] >= 280 && res[0] <= 310) {
       if (luminanceBalance >= 50) {
         res[2] += res[2] * (luminanceBalance - 50) / 100
-      } else { 
+      } else {
         res[2] -= res[2] * (50 - luminanceBalance) / 100
       }
     }
 
+    //конветування назад в rgb і відмальовка
     let new_rgb = HSLToRGB(res[0], res[1], res[2]);
     imgData[i] = new_rgb[0];
     imgData[i + 1] = new_rgb[1];
@@ -117,9 +114,7 @@ function changeLum() {
   }
 
   drawEditedImage(imageData)
-
 }
-
 
 function editPixels(imgData) {
   for (var i = 0; i < imgData.length; i += 4) {
@@ -129,13 +124,11 @@ function editPixels(imgData) {
     rgbpx[2] = imgData[i + 2];
 
     let res = rgbToXyz(rgbpx);
-
     let res_rgb = xyzToRgb(res);
 
     imgData[i] = res_rgb[0];
     imgData[i + 1] = res_rgb[1];
     imgData[i + 2] = res_rgb[2];
-
   }
 }
 
@@ -145,7 +138,6 @@ function drawEditedImage(newData) {
 }
 
 EL("#fileUpload").addEventListener("change", readImage);
-
 
 function pixel(canvas, event) {
   const rect = canvas.getBoundingClientRect()
@@ -162,7 +154,6 @@ function pixel(canvas, event) {
   let pos = 4 * w * Math.round(y) + 4 * Math.round(x);
 
   let arr_rgb = [imgd[pos], imgd[pos + 1], imgd[pos + 2]]
-  
 
   let xyz_res = rgbToXyz(arr_rgb);
 
@@ -175,11 +166,9 @@ function pixel(canvas, event) {
 
   const text_rgb = 'RGB(' + arr_rgb[0] + ', ' + arr_rgb[1] + ', ' + arr_rgb[2] + ')';
   const text_xyz = 'XYZ(' + xyz_res[0].toFixed(2) + ', ' + xyz_res[1].toFixed(2) + ', ' + xyz_res[2].toFixed(2) + ')';
-  
-  
+
   document.getElementById("rgb-s").innerHTML = text_rgb;
   document.getElementById("xyz-s").innerHTML = text_xyz;
-
 }
 
 function rgbToHex(r, g, b) {
@@ -199,7 +188,6 @@ canvas.addEventListener('click', function (e) {
 const r1 = document.getElementById("lum-range");
 r1.addEventListener("input", changeLum);
 r1.addEventListener("change", changeLum);
-  
 
 function download() {
   var canvas = document.getElementById("canvas_xyz");
